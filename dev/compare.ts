@@ -3,7 +3,7 @@
 
 class Compare {
 
-    private code:Array<number> = []
+    public code:Array<number> = []
     private randnumber:number;
 
     constructor(){

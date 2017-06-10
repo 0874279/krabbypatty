@@ -12,8 +12,8 @@ var Start = (function () {
     function Start() {
         this.width = 50;
         this.height = 50;
+        this.repeat = false;
         this.collision = new Collision();
-        this.compare = new Compare();
     }
     return Start;
 }());
@@ -56,7 +56,11 @@ var Breadtop = (function (_super) {
 }(Ingredients));
 var Collision = (function () {
     function Collision() {
-        this.confirm = false;
+        this.confirm5 = true;
+        this.confirm2 = true;
+        this.confirm1 = true;
+        this.confirm3 = true;
+        this.confirm4 = true;
         this.spaceBar = 32;
         this.anwser = [];
         this.breadtop = new Breadtop();
@@ -65,6 +69,8 @@ var Collision = (function () {
         this.ketchup = new Ketchup();
         this.mustard = new Mustard();
         this.player = new Player();
+        this.compare = new Compare();
+        this.lives = new Lives();
         requestAnimationFrame(this.gameLoop.bind(this));
     }
     Collision.prototype.gameLoop = function () {
@@ -74,76 +80,67 @@ var Collision = (function () {
         this.collisionBreadBot();
         this.collisionKetchup();
         this.collisionMustard();
+        this.checker();
         requestAnimationFrame(this.gameLoop.bind(this));
     };
     Collision.prototype.collisionBreadTop = function () {
-        var _this = this;
         if (this.player.x < this.breadtop.x + this.breadtop.width &&
             this.player.x + this.player.width > this.breadtop.x &&
             this.player.y < this.breadtop.y + this.breadtop.height &&
-            this.player.height + this.player.y > this.breadtop.y) {
-            window.addEventListener("keydown", function (e) { return _this.onKeyDown(e); });
-            window.addEventListener("keyup", function (e) { return _this.onKeyUp(e); });
+            this.player.height + this.player.y > this.breadtop.y && this.confirm5 == true) {
+            this.confirm5 = false;
             this.anwser.push(this.breadtop.key);
             console.log(this.anwser);
         }
     };
     Collision.prototype.collisionPatty = function () {
-        var _this = this;
         if (this.player.x < this.patty.x + this.patty.width &&
             this.player.x + this.player.width > this.patty.x &&
             this.player.y < this.patty.y + this.patty.height &&
-            this.player.height + this.player.y > this.patty.y) {
-            window.addEventListener("keydown", function (e) { return _this.onKeyDown(e); });
-            window.addEventListener("keyup", function (e) { return _this.onKeyUp(e); });
-            console.log(this.patty.key);
+            this.player.height + this.player.y > this.patty.y && this.confirm2 == true) {
+            this.confirm2 = false;
+            this.anwser.push(this.patty.key);
+            console.log(this.anwser);
         }
     };
     Collision.prototype.collisionBreadBot = function () {
-        var _this = this;
         if (this.player.x < this.breadbot.x + this.breadbot.width &&
             this.player.x + this.player.width > this.breadbot.x &&
             this.player.y < this.breadbot.y + this.breadbot.height &&
-            this.player.height + this.player.y > this.breadbot.y) {
-            window.addEventListener("keydown", function (e) { return _this.onKeyDown(e); });
-            window.addEventListener("keyup", function (e) { return _this.onKeyUp(e); });
-            console.log(this.confirm);
+            this.player.height + this.player.y > this.breadbot.y && this.confirm1 == true) {
+            this.confirm1 = false;
+            this.anwser.push(this.breadbot.key);
+            console.log(this.anwser);
         }
     };
     Collision.prototype.collisionKetchup = function () {
-        var _this = this;
         if (this.player.x < this.ketchup.x + this.ketchup.width &&
             this.player.x + this.player.width > this.ketchup.x &&
             this.player.y < this.ketchup.y + this.ketchup.height &&
-            this.player.height + this.player.y > this.ketchup.y) {
-            window.addEventListener("keydown", function (e) { return _this.onKeyDown(e); });
-            window.addEventListener("keyup", function (e) { return _this.onKeyUp(e); });
-            console.log(this.confirm);
+            this.player.height + this.player.y > this.ketchup.y && this.confirm3 == true) {
+            this.confirm3 = false;
+            this.anwser.push(this.ketchup.key);
+            console.log(this.anwser);
         }
     };
     Collision.prototype.collisionMustard = function () {
-        var _this = this;
         if (this.player.x < this.mustard.x + this.mustard.width &&
             this.player.x + this.player.width > this.mustard.x &&
             this.player.y < this.mustard.y + this.mustard.height &&
-            this.player.height + this.player.y > this.mustard.y) {
-            window.addEventListener("keydown", function (e) { return _this.onKeyDown(e); });
-            window.addEventListener("keyup", function (e) { return _this.onKeyUp(e); });
-            console.log(this.confirm);
+            this.player.height + this.player.y > this.mustard.y && this.confirm4 == true) {
+            this.confirm4 = false;
+            this.anwser.push(this.mustard.key);
+            console.log(this.anwser);
         }
     };
-    Collision.prototype.onKeyUp = function (event) {
-        switch (event.keyCode) {
-            case this.spaceBar:
-                this.confirm = false;
-                break;
-        }
-    };
-    Collision.prototype.onKeyDown = function (event) {
-        switch (event.keyCode) {
-            case this.spaceBar:
-                this.confirm = true;
-                break;
+    Collision.prototype.checker = function () {
+        if (this.compare.code.length == this.anwser.length) {
+            if (this.compare.code.toString() == this.anwser.toString()) {
+                console.log("Goed gedaan!");
+            }
+            else {
+                console.log("fout gemaakt!");
+            }
         }
     };
     return Collision;
@@ -183,6 +180,23 @@ var Ketchup = (function (_super) {
     }
     return Ketchup;
 }(Ingredients));
+var Lives = (function () {
+    function Lives() {
+        this.lives = 3;
+        this.createDiv();
+    }
+    Lives.prototype.createDiv = function () {
+        this.div = document.createElement("lives");
+        document.body.appendChild(this.div);
+    };
+    Lives.prototype.loseLife = function () {
+        if (this.start.repeat == false) {
+            console.log("gelukt!");
+            this.start = new Start;
+        }
+    };
+    return Lives;
+}());
 window.addEventListener("load", function () {
     new Game();
 });
